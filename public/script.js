@@ -90,6 +90,7 @@ import {
     openai_messages_count,
     getTokenCountOpenAI,
     chat_completion_sources,
+    setupClaudePromptManager,
     getTokenizerModel,
 } from "./scripts/openai.js";
 
@@ -4262,6 +4263,18 @@ function changeMainAPI() {
         getStatus();
         getHordeModels();
     }
+
+    console.log(oai_settings.chat_completion_source)
+    switch (oai_settings.chat_completion_source) {
+        case chat_completion_sources.OPENAI:
+            console.log('Setting up OpenAI prompt manager');
+            setupOpenAIPromptManager(oai_settings);
+            break;
+        case chat_completion_sources.CLAUDE:
+            console.log('Setting up Claude prompt manager');
+            setupClaudePromptManager(oai_settings);
+            break;
+    }
 }
 
 ////////////////////////////////////////////////////
@@ -4834,13 +4847,13 @@ async function getSettings(type) {
 
         // OpenAI
         loadOpenAISettings(data, settings);
-                setupOpenAIPromptManager(settings);
 
         // Horde
         loadHordeSettings(settings);
 
         // Poe
         loadPoeSettings(settings);
+        // setupPoePromptManager(settings);
 
         // Load power user settings
         loadPowerUserSettings(settings, data);
